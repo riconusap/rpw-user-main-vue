@@ -16,7 +16,17 @@ Start here if this is your first time with the project:
 - Troubleshooting common issues
 - **Time to complete:** 5-10 minutes
 
-### 2. [QUICK-START.md](./QUICK-START.md) ⚡
+### 2. [DOCKER.md](./DOCKER.md) 🐳 DOCKER SETUP
+**Docker containerization guide**
+- Docker prerequisites
+- Quick start with Docker Compose
+- Development and production modes
+- Container management
+- Nginx configuration
+- Deployment strategies
+- **Time to complete:** 10-15 minutes
+
+### 3. [QUICK-START.md](./QUICK-START.md) ⚡
 **Quick reference guide for developers**
 - 3-step getting started
 - Available scripts
@@ -31,7 +41,7 @@ Start here if this is your first time with the project:
 
 Essential documentation for understanding the project:
 
-### 3. [README-VUE.md](./README-VUE.md) 📘
+### 4. [README-VUE.md](./README-VUE.md) 📘
 **Comprehensive project documentation**
 - Project overview and tech stack
 - Directory structure
@@ -41,7 +51,7 @@ Essential documentation for understanding the project:
 - Future enhancements
 - **Time to read:** 10-15 minutes
 
-### 4. [MIGRATION-GUIDE.md](./MIGRATION-GUIDE.md) 🔄
+### 5. [MIGRATION-GUIDE.md](./MIGRATION-GUIDE.md) 🔄
 **Detailed HTML to Vue 3 migration notes**
 - Dependency analysis and installation
 - Component breakdown with before/after
@@ -53,7 +63,7 @@ Essential documentation for understanding the project:
 - **Length:** 10,000+ words
 - **Time to read:** 30-45 minutes
 
-### 5. [MIGRATION-SUMMARY.md](./MIGRATION-SUMMARY.md) 📊
+### 6. [MIGRATION-SUMMARY.md](./MIGRATION-SUMMARY.md) 📊
 **Executive summary of the migration**
 - What was completed
 - Migration statistics
@@ -69,7 +79,7 @@ Essential documentation for understanding the project:
 
 Technical architecture and design patterns:
 
-### 6. [ARCHITECTURE.md](./ARCHITECTURE.md) 🏛️
+### 7. [ARCHITECTURE.md](./ARCHITECTURE.md) 🏛️
 **Visual architecture diagrams and explanations**
 - Application architecture diagram
 - Component tree structure
@@ -87,7 +97,7 @@ Technical architecture and design patterns:
 
 Tools and templates for active development:
 
-### 7. [CHECKLIST.md](./CHECKLIST.md) ✅
+### 8. [CHECKLIST.md](./CHECKLIST.md) ✅
 **Development task checklist**
 - Completed items (core setup, components)
 - High priority TODOs (complete pages)
@@ -97,7 +107,7 @@ Tools and templates for active development:
 - Progress tracking
 - **Updated:** Regularly during development
 
-### 8. [COMPONENT-TEMPLATE.vue](./COMPONENT-TEMPLATE.vue) 📝
+### 9. [COMPONENT-TEMPLATE.vue](./COMPONENT-TEMPLATE.vue) 📝
 **Template for creating new Vue components**
 - Complete component structure
 - TypeScript integration

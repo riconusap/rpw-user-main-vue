@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up",
+    "docker:dev:build": "docker-compose -f docker-compose.dev.yml build",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up",
+    "docker:prod:build": "docker-compose -f docker-compose.prod.yml build",
+    "docker:prod:down": "docker-compose -f docker-compose.prod.yml down",
+    "docker:clean": "docker-compose down -v && docker system prune -af"
   },
   "keywords": [],
   "author": "",

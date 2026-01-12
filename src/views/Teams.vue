@@ -24,7 +24,7 @@
         <!-- Founder Section -->
         <div v-if="founder" class="row d-flex align-items-center justify-content-center">
           <div class="col-lg-4">
-            <img :src="getImageUrl(founder.photo)" class="w-100 rounded shadow" :alt="founder.name" @error="(e) => (e.target as HTMLImageElement).src = '/img/founder.png'">
+            <img :src="getImageUrl(founder.photo)" class="w-100 rounded shadow" :alt="founder.name" @error="handleImageError">
           </div>
           <div class="col-lg-8 d-flex flex-column justify-content-around">
             <div class="people-name d-flex flex-column text-center justify-content-center align-items-center">
@@ -47,7 +47,7 @@
                     class="team-item"
                   >
                     <div class="position-relative">
-                      <img class="img-fluid w-100" :src="getImageUrl(associate.photo)" :alt="associate.name" @error="(e) => (e.target as HTMLImageElement).src = '/img/user.jpg'">
+                      <img class="img-fluid w-100" :src="getImageUrl(associate.photo)" :alt="associate.name" @error="handleImageError">
                       <div class="team-overlay position-absolute d-flex align-items-center justify-content-center m-3">
                         <div class="d-flex align-items-center justify-content-start">
                           <a 
@@ -171,12 +171,18 @@ export default defineComponent({
       }, 100);
     });
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/user.jpg';
+    };
+
     return {
       loading,
       founder,
       associates,
       teamCarousel,
       getImageUrl,
+      handleImageError,
     };
   },
 });

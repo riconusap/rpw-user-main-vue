@@ -13,7 +13,7 @@
         <div v-else-if="articles.length > 0" class="row">
           <div v-for="article in articles" :key="article.id" class="col-md-4 mb-5">
             <div class="position-relative">
-              <img class="img-fluid w-100" :src="getImageUrl(article.featured_image)" :alt="article.title" @error="(e) => (e.target as HTMLImageElement).src = '/img/blog-1.jpg'" />
+              <img class="img-fluid w-100" :src="getImageUrl(article.featured_image)" :alt="article.title" @error="handleImageError" />
               <div
                 class="position-absolute bg-primary d-flex flex-column align-items-center justify-content-center"
                 style="width: 80px; height: 80px; bottom: 0; left: 0"
@@ -101,12 +101,18 @@ export default defineComponent({
       loadArticles();
     });
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/blog-1.jpg';
+    };
+
     return {
       loading,
       articles,
       getImageUrl,
       formatMonth,
       formatDay,
+      handleImageError,
     };
   },
 });

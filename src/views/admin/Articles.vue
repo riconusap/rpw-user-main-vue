@@ -1,6 +1,6 @@
 <template>
   <div class="articles-page">
-    <div class="page-header">
+    <div class="page-header-admin">
       <h1>Articles Management</h1>
       <router-link to="/admin/articles/new" class="btn btn-primary">
         <i class="fas fa-plus"></i> Write New Article
@@ -46,7 +46,7 @@
             v-if="article.featured_image"
             :src="getImageUrl(article.featured_image)"
             :alt="article.title"
-            @error="(e) => (e.target as HTMLImageElement).src = '/img/blog-1.jpg'"
+            @error="handleImageError"
           />
           <div v-else class="image-placeholder">
             <i class="fas fa-newspaper"></i>
@@ -260,6 +260,11 @@ export default defineComponent({
       }
     };
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/blog-1.jpg';
+    };
+
     onMounted(() => {
       loadArticles();
       loadCategories();
@@ -279,6 +284,7 @@ export default defineComponent({
       toggleFeatured,
       deleteArticle,
       getImageUrl,
+      handleImageError,
     };
   },
 });
@@ -289,14 +295,14 @@ export default defineComponent({
   max-width: 1400px;
 }
 
-.page-header {
+.page-header-admin {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
 
-.page-header h1 {
+.page-header-admin h1 {
   font-size: 2rem;
   color: #1e293b;
   margin: 0;

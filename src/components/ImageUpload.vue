@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, computed } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { uploadImage, deleteImage, getImageUrl } from '@/lib/supabase';
 
 export default defineComponent({

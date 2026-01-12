@@ -28,7 +28,7 @@
               style="height: 100vh; object-fit: cover;" 
               :src="getImageUrl(slide.background_image)" 
               :alt="slide.title"
-              @error="(e) => (e.target as HTMLImageElement).src = '/img/bg1.jpg'"
+              @error="handleImageError"
             />
             <div class="carousel-caption d-flex align-items-center justify-content-center">
               <div class="p-5" style="width: 100%; max-width: 900px">
@@ -109,10 +109,16 @@ export default defineComponent({
       }, 100);
     });
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/bg1.jpg';
+    };
+
     return {
       loading,
       slides,
       getImageUrl,
+      handleImageError,
     };
   },
 });

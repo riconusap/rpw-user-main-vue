@@ -22,7 +22,7 @@
             <div v-else-if="attorneys.length > 0" class="owl-carousel team-carousel" data-aos="fade-right" data-aos-duration="2000" ref="teamCarousel">
               <div v-for="attorney in attorneys" :key="attorney.id" class="team-item">
                 <div class="position-relative">
-                  <img class="img-fluid w-100" :src="getImageUrl(attorney.photo)" :alt="attorney.name" @error="(e) => (e.target as HTMLImageElement).src = '/img/user.jpg'" />
+                  <img class="img-fluid w-100" :src="getImageUrl(attorney.photo)" :alt="attorney.name" @error="handleImageError" />
                   <div
                     class="team-overlay position-absolute d-flex align-items-center justify-content-center m-3"
                   >
@@ -125,11 +125,17 @@ export default defineComponent({
       }, 100);
     });
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/user.jpg';
+    };
+
     return {
       teamCarousel,
       loading,
       attorneys,
       getImageUrl,
+      handleImageError,
     };
   },
 });

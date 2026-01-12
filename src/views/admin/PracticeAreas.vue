@@ -1,6 +1,6 @@
 <template>
   <div class="practice-areas-page">
-    <div class="page-header">
+    <div class="page-header-admin">
       <h1>Practice Areas Management</h1>
       <button @click="openModal()" class="btn btn-primary">
         <i class="fas fa-plus"></i> Add Practice Area
@@ -373,14 +373,14 @@ export default defineComponent({
   max-width: 1400px;
 }
 
-.page-header {
+.page-header-admin {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
 
-.page-header h1 {
+.page-header-admin h1 {
   font-size: 2rem;
   color: #1e293b;
   margin: 0;

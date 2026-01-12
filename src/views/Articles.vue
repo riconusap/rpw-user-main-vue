@@ -66,7 +66,7 @@
               :key="post.id"
               class="d-flex mb-3"
             >
-              <img class="img-fluid" :src="getImageUrl(post.featured_image)" style="width: 80px; height: 80px; object-fit: cover;" :alt="post.title" @error="(e) => (e.target as HTMLImageElement).src = '/img/blog-2.jpg'">
+              <img class="img-fluid" :src="getImageUrl(post.featured_image)" style="width: 80px; height: 80px; object-fit: cover;" :alt="post.title" @error="handleImageError">
               <div class="d-flex align-items-center border border-left-0 px-3" style="height: 80px;">
                 <RouterLink :to="`/articles/${post.slug}`" class="text-secondary font-weight-semi-bold">
                   {{ post.title }}
@@ -93,7 +93,7 @@
                 class="col-md-6 mb-3"
               >
                 <div class="position-relative">
-                  <img class="img-fluid w-100" :src="getImageUrl(article.featured_image)" :alt="article.title" @error="(e) => (e.target as HTMLImageElement).src = '/img/blog-1.jpg'">
+                  <img class="img-fluid w-100" :src="getImageUrl(article.featured_image)" :alt="article.title" @error="handleImageError">
                   <div 
                     class="position-absolute bg-primary d-flex flex-column align-items-center justify-content-center"
                     style="width: 80px; height: 80px; bottom: 0; left: 0;"
@@ -206,7 +206,14 @@ export default defineComponent({
     const totalCount = ref(0);
 
     const categories = ref<Category[]>([]);
-    const recentPosts = ref<Article[]>([]);
+    interface RecentPost {
+      id: string;
+      title: string;
+      slug: string;
+      featured_image: string;
+      published_date: string;
+    }
+    const recentPosts = ref<RecentPost[]>([]);
     const articles = ref<Article[]>([]);
 
     const totalPages = computed(() => Math.ceil(totalCount.value / pageSize));
@@ -321,6 +328,11 @@ export default defineComponent({
       ]);
     });
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/blog-1.jpg';
+    };
+
     return {
       loading,
       searchKeyword,
@@ -335,6 +347,7 @@ export default defineComponent({
       formatMonth,
       formatDay,
       getImageUrl,
+      handleImageError,
     };
   },
 });

@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard">
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h1>Dashboard</h1>
       <p>Welcome to RPW Law Firm Admin Panel</p>
-    </div>
+    </div> -->
 
     <!-- Statistics Cards -->
     <div class="stats-grid">

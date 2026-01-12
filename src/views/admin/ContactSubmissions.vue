@@ -1,6 +1,6 @@
 <template>
   <div class="submissions-page">
-    <div class="page-header">
+    <div class="page-header-admin">
       <h1>Contact Submissions</h1>
       <div class="header-actions">
         <select v-model="filterStatus" class="filter-select">
@@ -383,7 +383,7 @@ export default defineComponent({
   max-width: 1400px;
 }
 
-.page-header {
+.page-header-admin {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -392,7 +392,7 @@ export default defineComponent({
   gap: 1rem;
 }
 
-.page-header h1 {
+.page-header-admin h1 {
   font-size: 2rem;
   color: #1e293b;
   margin: 0;

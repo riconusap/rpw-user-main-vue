@@ -1,6 +1,6 @@
 <template>
   <div class="attorneys-page">
-    <div class="page-header">
+    <div class="page-header-admin">
       <h1>Attorneys Management</h1>
       <button @click="openModal()" class="btn btn-primary">
         <i class="fas fa-plus"></i> Add Attorney
@@ -25,7 +25,7 @@
             v-if="attorney.photo"
             :src="getImageUrl(attorney.photo)"
             :alt="attorney.full_name"
-            @error="(e) => (e.target as HTMLImageElement).src = '/img/user.jpg'"
+            @error="handleImageError"
           />
           <div v-else class="photo-placeholder">
             <i class="fas fa-user"></i>
@@ -450,6 +450,11 @@ export default defineComponent({
       }
     };
 
+    const handleImageError = (event: Event) => {
+      const target = event.target as HTMLImageElement;
+      target.src = '/img/user.jpg';
+    };
+
     onMounted(() => {
       loadAttorneys();
     });
@@ -468,6 +473,7 @@ export default defineComponent({
       deleteAttorney,
       truncateBio,
       getImageUrl,
+      handleImageError,
     };
   },
 });
@@ -478,14 +484,14 @@ export default defineComponent({
   max-width: 1400px;
 }
 
-.page-header {
+.page-header-admin {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
 
-.page-header h1 {
+.page-header-admin h1 {
   font-size: 2rem;
   color: #1e293b;
   margin: 0;

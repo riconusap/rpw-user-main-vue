@@ -12,16 +12,26 @@
             <a href="#" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold">Discover More</a>
           </div>
           <div class="col-lg-12" data-aos="fade-right" data-aos-duration="2000">
-            <div class="row">
-              <div v-for="(service, index) in services" :key="index" class="col-md-6 mb-5">
+            <div v-if="loading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+            <div v-else-if="features.length > 0" class="row">
+              <div v-for="feature in features" :key="feature.id" class="col-md-6 mb-5">
                 <div class="d-flex">
-                  <img :src="service.image" width="150px" class="rounded" :alt="service.title" />
-                  <div class="d-flex flex-column ml-3">
-                    <h5 class="font-weight-bold mb-3">{{ service.title }}</h5>
-                    <p>{{ service.description }}</p>
+                  <div class="feature-icon mr-3">
+                    <i :class="feature.icon" class="fa-3x text-primary"></i>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <h5 class="font-weight-bold mb-3">{{ feature.title }}</h5>
+                    <p>{{ feature.description }}</p>
                   </div>
                 </div>
               </div>
+            </div>
+            <div v-else class="alert alert-info">
+              No features available. Please add features in the admin panel.
             </div>
           </div>
         </div>
@@ -31,50 +41,60 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import { supabase } from '@/lib/supabase';
 
-interface Service {
-  image: string;
+interface Feature {
+  id: string;
   title: string;
   description: string;
+  icon: string;
+  order_position: number;
 }
 
 export default defineComponent({
   name: 'ServicesSection',
   setup() {
-    const services = ref<Service[]>([
-      {
-        image: '/img/claw.jpg',
-        title: 'Corporate Law',
-        description:
-          'Advising clients on corporate structures, regulations and compliance. Assist join ventures, foreign and local labour.',
-      },
-      {
-        image: '/img/claw.jpg',
-        title: 'Corporate Law',
-        description:
-          'Advising clients on corporate structures, regulations and compliance. Assist join ventures, foreign and local labour.',
-      },
-      {
-        image: '/img/claw.jpg',
-        title: 'Corporate Law',
-        description:
-          'Advising clients on corporate structures, regulations and compliance. Assist join ventures, foreign and local labour.',
-      },
-      {
-        image: '/img/claw.jpg',
-        title: 'Corporate Law',
-        description:
-          'Advising clients on corporate structures, regulations and compliance. Assist join ventures, foreign and local labour.',
-      },
-    ]);
+    const loading = ref(true);
+    const features = ref<Feature[]>([]);
+
+    const loadFeatures = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('features')
+          .select('*')
+          .eq('is_active', true)
+          .order('order_position', { ascending: true });
+
+        if (error) throw error;
+        features.value = data || [];
+      } catch (error) {
+        console.error('Error loading features:', error);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    onMounted(() => {
+      loadFeatures();
+    });
 
     return {
-      services,
+      loading,
+      features,
     };
   },
 });
 </script>
+
+<style scoped>
+.feature-icon {
+  min-width: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+</style>
 
 <style scoped>
 /* Component-specific styles if needed */

@@ -1,0 +1,75 @@
+-- ============================================
+-- Supabase Storage RLS Policies Fix
+-- ============================================
+-- IMPORTANT: Storage policies CANNOT be set via SQL due to permission restrictions.
+-- You must configure them through the Supabase Dashboard UI.
+-- Follow the steps below to fix the upload permission issue.
+-- ============================================
+
+-- ============================================
+-- STEP 1: Configure Storage Bucket Policies
+-- ============================================
+-- 1. Go to your Supabase Dashboard: https://app.supabase.com
+-- 2. Select your project
+-- 3. Navigate to: Storage > Policies (left sidebar)
+-- 4. Find your "images" bucket (or create it first if it doesn't exist)
+-- 5. Click "New Policy" on the images bucket
+-- 
+-- Create 4 policies with the following settings:
+--
+-- POLICY 1: Public Read Access
+-- - Policy Name: "Public can view images"
+-- - Allowed Operations: SELECT
+-- - Target Roles: public
+-- - Policy Definition: bucket_id = 'images'
+--
+-- POLICY 2: Authenticated Upload
+-- - Policy Name: "Authenticated users can upload"  
+-- - Allowed Operations: INSERT
+-- - Target Roles: authenticated
+-- - Policy Definition: bucket_id = 'images'
+--
+-- POLICY 3: Authenticated Update
+-- - Policy Name: "Authenticated users can update"
+-- - Allowed Operations: UPDATE
+-- - Target Roles: authenticated
+-- - Policy Definition: bucket_id = 'images'
+--
+-- POLICY 4: Authenticated Delete
+-- - Policy Name: "Authenticated users can delete"
+-- - Allowed Operations: DELETE
+-- - Target Roles: authenticated
+-- - Policy Definition: bucket_id = 'images'
+-- ============================================
+
+-- ============================================
+-- ALTERNATIVE: Use Policy Templates
+-- ============================================
+-- Supabase provides policy templates for common scenarios:
+-- 1. In Storage > Policies
+-- 2. Click "New Policy" 
+-- 3. Choose template: "Allow authenticated users to upload"
+-- 4. Choose template: "Allow public access to read"
+-- 5. Modify bucket_id to 'images' in each template
+-- ============================================
+
+-- ============================================
+-- STEP 2: Verify Bucket Configuration
+-- ============================================
+-- Make sure the 'images' bucket is properly configured:
+-- 1. Go to Storage in Supabase Dashboard
+-- 2. Check if 'images' bucket exists (create if not)
+-- 3. Bucket settings should be:
+--    - Public bucket: YES (for public read access)
+--    - File size limit: 50MB (recommended)
+--    - Allowed MIME types: image/jpeg, image/png, image/webp, image/gif
+-- ============================================
+
+-- ============================================
+-- STEP 3: Test Upload
+-- ============================================
+-- After configuring policies:
+-- 1. Log in to admin panel
+-- 2. Try uploading an image in Hero Slides, Attorneys, or Articles
+-- 3. Should work without "RLS policy violation" error
+-- ============================================

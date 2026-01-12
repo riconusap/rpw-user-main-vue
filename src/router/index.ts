@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { adminRoutes } from './admin';
+import { checkSession } from '@/lib/supabase';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,6 +28,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'About',
     component: () => import('@/views/About.vue'),
   },
+  // Admin routes
+  ...adminRoutes,
 ];
 
 const router = createRouter({
@@ -43,6 +47,23 @@ const router = createRouter({
       return { top: 0 };
     }
   },
+});
+
+// Auth guard
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth) {
+    const { session } = await checkSession();
+    
+    if (!session) {
+      next({ name: 'AdminLogin', query: { redirect: to.fullPath } });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

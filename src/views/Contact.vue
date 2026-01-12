@@ -17,30 +17,21 @@
     <div class="container-fluid py-5">
       <div class="container">
         <div class="text-center">
-          <small class="bg-primary text-white text-uppercase font-weight-bold text-center px-1">Get In Touch</small>
-          <h1 class="mt-2 mb-5">Contact For Any Queries</h1>
+          <small class="bg-primary text-white text-uppercase font-weight-bold text-center px-1">{{ pageContent.subtitle }}</small>
+          <h1 class="mt-2 mb-5">{{ pageContent.title }}</h1>
         </div>
         <div class="row">
           <div class="col-md-5">
-            <div class="d-flex align-items-center border mb-3 p-4">
-              <i class="fa fa-2x fa-map-marker-alt text-primary mr-3"></i>
+            <div 
+              v-for="(contact, index) in pageContent.contactInfo" 
+              :key="index"
+              class="d-flex align-items-center border p-4"
+              :class="index < pageContent.contactInfo.length - 1 ? 'mb-3' : 'mb-3 mb-md-0'"
+            >
+              <i :class="contact.icon"></i>
               <div class="d-flex flex-column">
-                <h5 class="font-weight-bold">Our Office</h5>
-                <p class="m-0">Jakarta, Indonesia</p>
-              </div>
-            </div>
-            <div class="d-flex align-items-center border mb-3 p-4">
-              <i class="fa fa-2x fa-envelope-open text-primary mr-3"></i>
-              <div class="d-flex flex-column">
-                <h5 class="font-weight-bold">Email Us</h5>
-                <p class="m-0">proxy@rpwadvocates.com</p>
-              </div>
-            </div>
-            <div class="d-flex align-items-center border mb-3 mb-md-0 p-4">
-              <i class="fas fa-2x fa-phone-alt text-primary mr-3"></i>
-              <div class="d-flex flex-column">
-                <h5 class="font-weight-bold">Call Us</h5>
-                <p class="m-0">(021) - 29557422</p>
+                <h5 class="font-weight-bold">{{ contact.title }}</h5>
+                <p class="m-0">{{ contact.value }}</p>
               </div>
             </div>
           </div>
@@ -115,6 +106,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import { useSEO, seoConfigs } from '@/composables/useSEO';
+import { supabase } from '@/lib/supabase';
 
 interface FormData {
   name: string;
@@ -128,11 +120,40 @@ interface FormStatus {
   message: string;
 }
 
+interface ContactInfo {
+  icon: string;
+  title: string;
+  value: string;
+}
+
 export default defineComponent({
   name: 'Contact',
   setup() {
     // SEO Meta Tags
     useSEO(seoConfigs.contact);
+
+    // Page Content
+    const pageContent = reactive({
+      title: 'Contact For Any Queries',
+      subtitle: 'Get In Touch',
+      contactInfo: [
+        {
+          icon: 'fa fa-2x fa-map-marker-alt text-primary mr-3',
+          title: 'Our Office',
+          value: 'Jakarta, Indonesia'
+        },
+        {
+          icon: 'fa fa-2x fa-envelope-open text-primary mr-3',
+          title: 'Email Us',
+          value: 'proxy@rpwadvocates.com'
+        },
+        {
+          icon: 'fas fa-2x fa-phone-alt text-primary mr-3',
+          title: 'Call Us',
+          value: '(021) - 29557422'
+        }
+      ] as ContactInfo[]
+    });
     const formData = reactive<FormData>({
       name: '',
       email: '',
@@ -148,15 +169,24 @@ export default defineComponent({
       formStatus.value = null;
 
       try {
-        // Simulate form submission
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Submit to Supabase contact_submissions table
+        const { error } = await supabase
+          .from('contact_submissions')
+          .insert([
+            {
+              name: formData.name,
+              email: formData.email,
+              subject: formData.subject,
+              message: formData.message,
+              status: 'new',
+            },
+          ]);
         
-        // In production, you would send the data to your backend
-        console.log('Form submitted:', formData);
+        if (error) throw error;
         
         formStatus.value = {
           type: 'success',
-          message: 'Your message has been sent successfully!',
+          message: 'Your message has been sent successfully! We will get back to you soon.',
         };
         
         // Reset form
@@ -165,9 +195,10 @@ export default defineComponent({
         formData.subject = '';
         formData.message = '';
       } catch (error) {
+        console.error('Error submitting contact form:', error);
         formStatus.value = {
           type: 'danger',
-          message: 'Failed to send message. Please try again.',
+          message: 'Failed to send message. Please try again later.',
         };
       } finally {
         isSubmitting.value = false;
@@ -175,6 +206,7 @@ export default defineComponent({
     };
 
     return {
+      pageContent,
       formData,
       formStatus,
       isSubmitting,

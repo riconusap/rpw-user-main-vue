@@ -140,6 +140,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useSEO, seoConfigs } from '@/composables/useSEO';
 
 interface Category {
   name: string;
@@ -166,6 +167,9 @@ interface Article {
 export default defineComponent({
   name: 'Articles',
   setup() {
+    // SEO Meta Tags
+    useSEO(seoConfigs.articles);
+
     const searchKeyword = ref('');
 
     const categories: Category[] = [

@@ -114,6 +114,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
+import { useSEO, seoConfigs } from '@/composables/useSEO';
 
 interface FormData {
   name: string;
@@ -130,6 +131,8 @@ interface FormStatus {
 export default defineComponent({
   name: 'Contact',
   setup() {
+    // SEO Meta Tags
+    useSEO(seoConfigs.contact);
     const formData = reactive<FormData>({
       name: '',
       email: '',

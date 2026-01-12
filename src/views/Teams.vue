@@ -74,6 +74,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
+import { useSEO, seoConfigs } from '@/composables/useSEO';
 
 interface Founder {
   name: string;
@@ -90,6 +91,9 @@ interface Associate {
 export default defineComponent({
   name: 'Teams',
   setup() {
+    // SEO Meta Tags
+    useSEO(seoConfigs.teams);
+
     const teamCarousel = ref<HTMLElement | null>(null);
 
     const founder: Founder = {

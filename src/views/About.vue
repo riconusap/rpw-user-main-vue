@@ -96,10 +96,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useSEO, seoConfigs } from '@/composables/useSEO';
 
 export default defineComponent({
   name: 'About',
   setup() {
+    // SEO Meta Tags
+    useSEO(seoConfigs.about);
+
     return {};
   },
 });

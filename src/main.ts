@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
+import { createUnhead } from '@unhead/vue';
 
 // Import global CSS dependencies
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,9 +43,13 @@ Promise.all([
 
 const app = createApp(App);
 const pinia = createPinia();
+const head = createUnhead();
 
 app.use(pinia);
 app.use(router);
+
+// Make head available to the app
+app.provide('head', head);
 
 // Initialize AOS when app is mounted
 app.mount('#app');

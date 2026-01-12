@@ -21,24 +21,11 @@
             <div class="row align-items-center pb-1">
               <div data-aos="fade-left" data-aos-duration="1000" class="col-lg-7 mt-5 mt-lg-0">
                 <h1 class="mt-2 mb-3">About Our Firm</h1>
-                <h4>R. PRAMA WIJAWA & PARTNERS</h4>
+                <h4>{{ content.firmName }}</h4>
                 <p class="mb-4">
-                  Our firm is focused on the results. With
-                  exceptional experiences and depth of
-                  knowledge, we delivers a practical and
-                  objective solutions to solving your legal
-                  problems. Our mindset is understanding what
-                  your needs and deliver a top notch legal
-                  services.
+                  {{ content.description.paragraph1 }}
                   <br><br>
-                  The firm is committed to provide excellent
-                  service to develop a long-term relationship
-                  with clients. We believe that our dedication in
-                  understanding client's objectives are finding
-                  the right approach to achieve those objectives
-                  will be a strength point in developing a
-                  long-term mutual relationship between the
-                  firm and its clients.
+                  {{ content.description.paragraph2 }}
                 </p>
               </div>
               <div data-aos="fade-right" data-aos-duration="1000" class="col-lg-5 border-0">
@@ -46,41 +33,15 @@
               </div>
             </div>
             <div data-aos="fade-right" class="row mt-4">
-              <div class="col-md-4">
+              <div v-for="(contact, index) in content.contacts" :key="index" class="col-md-4">
                 <div class="card border-0">
                   <div class="card-header bg-transparent border-0">
-                    <h5 class="font-weight-bold">Email</h5>
+                    <h5 class="font-weight-bold">{{ contact.title }}</h5>
                   </div>
                   <div class="card-body d-flex align-items-center">
-                    <i class="fa fa-2x fa-envelope-open text-primary mr-3"></i>
+                    <i :class="contact.icon"></i>
                     <div class="d-flex flex-column">
-                      <p class="m-0">proxy@rpwadvocates.com</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-0">
-                  <div class="card-header bg-transparent border-0">
-                    <h5 class="font-weight-bold">Phone</h5>
-                  </div>
-                  <div class="card-body d-flex align-items-center">
-                    <i class="fa fa-2x fa-phone-alt text-primary mr-3"></i>
-                    <div class="d-flex flex-column">
-                      <p class="m-0">(021) - 29557422</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-0">
-                  <div class="card-header bg-transparent border-0">
-                    <h5 class="font-weight-bold">Office</h5>
-                  </div>
-                  <div class="card-body d-flex align-items-center">
-                    <i class="fas fa-2x fa-building text-primary mr-3"></i>
-                    <div class="d-flex flex-column">
-                      <p class="m-0">Jakarta, Indonesia</p>
+                      <p class="m-0">{{ contact.value }}</p>
                     </div>
                   </div>
                 </div>
@@ -95,8 +56,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { useSEO, seoConfigs } from '@/composables/useSEO';
+
+interface ContactCard {
+  title: string;
+  icon: string;
+  value: string;
+}
 
 export default defineComponent({
   name: 'About',
@@ -104,7 +71,35 @@ export default defineComponent({
     // SEO Meta Tags
     useSEO(seoConfigs.about);
 
-    return {};
+    // Page Content
+    const content = reactive({
+      firmName: 'R. PRAMA WIJAYA & PARTNERS',
+      description: {
+        paragraph1: `Our firm is focused on the results. With exceptional experiences and depth of knowledge, we delivers a practical and objective solutions to solving your legal problems. Our mindset is understanding what your needs and deliver a top notch legal services.`,
+        paragraph2: `The firm is committed to provide excellent service to develop a long-term relationship with clients. We believe that our dedication in understanding client's objectives are finding the right approach to achieve those objectives will be a strength point in developing a long-term mutual relationship between the firm and its clients.`
+      },
+      contacts: [
+        {
+          title: 'Email',
+          icon: 'fa fa-2x fa-envelope-open text-primary mr-3',
+          value: 'proxy@rpwadvocates.com'
+        },
+        {
+          title: 'Phone',
+          icon: 'fa fa-2x fa-phone-alt text-primary mr-3',
+          value: '(021) - 29557422'
+        },
+        {
+          title: 'Office',
+          icon: 'fas fa-2x fa-building text-primary mr-3',
+          value: 'Jakarta, Indonesia'
+        }
+      ] as ContactCard[]
+    });
+
+    return {
+      content
+    };
   },
 });
 </script>

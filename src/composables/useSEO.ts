@@ -1,5 +1,5 @@
 // SEO Composable for managing meta tags across pages
-import { useHead } from '@unhead/vue';
+import { useHead } from '@vueuse/head';
 
 export interface SEOOptions {
   title: string;

@@ -8,11 +8,11 @@ services:
       target: production
     container_name: rpw-law-firm-prod
     ports:
-      - "80:80"
+      - "8084:80"
     environment:
       - NODE_ENV=production
     networks:
-      - rpw-network
+      - nginx-proxy_proxy-network
     restart: always
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
@@ -22,5 +22,5 @@ services:
       start_period: 40s
 
 networks:
-  rpw-network:
-    driver: bridge
+  nginx-proxy_proxy-network:
+    external: true

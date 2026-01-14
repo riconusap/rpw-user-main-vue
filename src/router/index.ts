@@ -55,7 +55,8 @@ const router = createRouter({
 });
 
 // Auth guard
-router.beforeEach(async (to, next) => {
+
+router.beforeEach(async (to, _from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (requiresAuth) {

@@ -104,9 +104,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, onMounted, computed } from 'vue';
 import { useSEO, seoConfigs } from '@/composables/useSEO';
 import { supabase } from '@/lib/supabase';
+import { useSettings } from '@/composables/useSettings';
 
 interface FormData {
   name: string;
@@ -132,27 +133,54 @@ export default defineComponent({
     // SEO Meta Tags
     useSEO(seoConfigs.contact);
 
-    // Page Content
-    const pageContent = reactive({
-      title: 'Contact For Any Queries',
-      subtitle: 'Get In Touch',
-      contactInfo: [
-        {
+    // Load settings
+    const { settings, loadSettings } = useSettings();
+
+    onMounted(() => {
+      loadSettings();
+    });
+
+    // Page Content - dynamically use settings data
+    const pageContent = computed(() => {
+      const contactInfo: ContactInfo[] = [];
+      
+      if (settings.value?.contact_address) {
+        contactInfo.push({
           icon: 'fa fa-2x fa-map-marker-alt text-primary mr-3',
           title: 'Our Office',
-          value: 'Jakarta, Indonesia'
-        },
-        {
+          value: settings.value.contact_address
+        });
+      }
+      
+      if (settings.value?.contact_email) {
+        contactInfo.push({
           icon: 'fa fa-2x fa-envelope-open text-primary mr-3',
           title: 'Email Us',
-          value: 'proxy@rpwadvocates.com'
-        },
-        {
+          value: settings.value.contact_email
+        });
+      }
+      
+      if (settings.value?.contact_phone) {
+        contactInfo.push({
           icon: 'fas fa-2x fa-phone-alt text-primary mr-3',
           title: 'Call Us',
-          value: '(021) - 29557422'
-        }
-      ] as ContactInfo[]
+          value: settings.value.contact_phone
+        });
+      }
+
+      if (settings.value?.contact_whatsapp) {
+        contactInfo.push({
+          icon: 'fab fa-2x fa-whatsapp text-primary mr-3',
+          title: 'WhatsApp',
+          value: settings.value.contact_whatsapp
+        });
+      }
+      
+      return {
+        title: 'Contact For Any Queries',
+        subtitle: 'Get In Touch',
+        contactInfo
+      };
     });
     const formData = reactive<FormData>({
       name: '',

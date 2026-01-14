@@ -23,6 +23,10 @@
       </nav>
 
       <div class="sidebar-footer">
+        <router-link to="/" class="btn-view-site" target="_blank">
+          <i class="fas fa-external-link-alt"></i>
+          <span v-if="sidebarOpen">View Landing Page</span>
+        </router-link>
         <button @click="handleLogout" class="btn-logout">
           <i class="fas fa-sign-out-alt"></i>
           <span v-if="sidebarOpen">Logout</span>
@@ -73,6 +77,7 @@ export default defineComponent({
       { path: '/admin/features', label: 'Features', icon: 'fas fa-star' },
       { path: '/admin/practice-areas', label: 'Practice Areas', icon: 'fas fa-gavel' },
       { path: '/admin/attorneys', label: 'Attorneys', icon: 'fas fa-user-tie' },
+      { path: '/admin/clients', label: 'Clients', icon: 'fas fa-briefcase' },
       { path: '/admin/articles', label: 'Articles', icon: 'fas fa-newspaper' },
       { path: '/admin/contact-submissions', label: 'Contact Forms', icon: 'fas fa-envelope' },
       { path: '/admin/settings', label: 'Settings', icon: 'fas fa-cog' },
@@ -213,8 +218,12 @@ export default defineComponent({
 .sidebar-footer {
   padding: 0.75rem;
   border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
+.btn-view-site,
 .btn-logout {
   width: 100%;
   display: flex;
@@ -228,6 +237,18 @@ export default defineComponent({
   border-radius: 6px;
   transition: all 0.2s;
   font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.btn-view-site {
+  border-color: #d4a948;
+  color: #d4a948;
+}
+
+.btn-view-site:hover {
+  background: #fef9e7;
+  border-color: #c69840;
+  color: #c69840;
 }
 
 .btn-logout:hover {
@@ -236,11 +257,13 @@ export default defineComponent({
   color: #dc2626;
 }
 
+.sidebar-collapsed .btn-view-site,
 .sidebar-collapsed .btn-logout {
   justify-content: center;
   padding: 0.625rem;
 }
 
+.sidebar-collapsed .btn-view-site span,
 .sidebar-collapsed .btn-logout span {
   display: none;
 }

@@ -1,0 +1,23 @@
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #d4a948 0%, #c69840 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.feature-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
+}
+
+.feature-icon i {
+  font-size: 1.75rem;
+  color: white;
+}

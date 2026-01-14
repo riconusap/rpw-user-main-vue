@@ -342,13 +342,35 @@ export default defineComponent({
 .search-input {
   padding: 0.75rem 1rem;
   border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.875rem;
   background: white;
+  transition: all 0.2s ease;
 }
 
 .filter-select {
   cursor: pointer;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23d4a948' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.filter-select:hover {
+  border-color: #d4a948;
+  box-shadow: 0 2px 8px rgba(212, 169, 72, 0.1);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #d4a948;
+  box-shadow: 0 0 0 3px rgba(212, 169, 72, 0.1);
 }
 
 .search-input {
@@ -359,6 +381,7 @@ export default defineComponent({
 .search-input:focus {
   outline: none;
   border-color: #d4a948;
+  box-shadow: 0 0 0 3px rgba(212, 169, 72, 0.1);
 }
 
 .loading {
@@ -399,16 +422,18 @@ export default defineComponent({
 .article-image {
   position: relative;
   width: 280px;
-  height: 200px;
+  /* height: 200px; */
   flex-shrink: 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  background: #f8fafc;
+  border-right: 1px solid #f1f5f9;
 }
 
 .article-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .image-placeholder {

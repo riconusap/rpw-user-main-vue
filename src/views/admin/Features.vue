@@ -21,7 +21,8 @@
         :class="{ inactive: !feature.is_active }"
       >
         <div class="feature-icon">
-          <i :class="feature.icon"></i>
+          <img class="w-100" v-if="feature.icon_image_url" :src="getImageUrl(feature.icon_image_url, 'icons')" alt="icon" />
+          <i v-else :class="feature.icon"></i>
         </div>
         <div class="feature-content">
           <h3>{{ feature.title }}</h3>
@@ -64,23 +65,55 @@
         </div>
 
         <form @submit.prevent="saveFeature" class="modal-body">
-          <div class="form-group">
+          <div class="">
+            <label>Icon Type *</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input v-model="formData.icon_type" type="radio" value="font-awesome" />
+                <span>Font Awesome Icon</span>
+              </label>
+              <label class="radio-label">
+                <input v-model="formData.icon_type" type="radio" value="image" />
+                <span>Upload Image</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Font Awesome Icon -->
+          <div v-if="formData.icon_type === 'font-awesome'" class="form-group">
             <label for="icon">Icon Class *</label>
-            <input
-              id="icon"
-              v-model="formData.icon"
-              type="text"
-              class="form-control"
-              required
-              placeholder="fas fa-balance-scale"
-            />
-            <small class="form-help">
-              Browse icons at
-              <a href="https://fontawesome.com/icons" target="_blank">FontAwesome</a>
-            </small>
+            <div class="input-with-button">
+              <input
+                id="icon"
+                v-model="formData.icon"
+                type="text"
+                class="form-control"
+                :required="formData.icon_type === 'font-awesome'"
+                placeholder="fas fa-balance-scale"
+                readonly
+              />
+              <button
+                type="button"
+                @click="showIconPicker = true"
+                class="btn-browse-icon"
+              >
+                <i class="fas fa-icons"></i> Browse Icons
+              </button>
+            </div>
             <div class="icon-preview">
               <i :class="formData.icon"></i>
             </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div v-if="formData.icon_type === 'image'" class="form-group">
+            <label>Icon Image *</label>
+            <ImageUpload
+              v-model="formData.icon_image_url"
+              :bucket="'icons'"
+              :label="'Upload Icon'"
+            />
+            <small class="form-help">Recommended: Square image (64x64px or larger), PNG with transparent background</small>
           </div>
 
           <div class="form-group">
@@ -120,7 +153,8 @@
               />
             </div>
 
-            <div class="form-group">
+            <div class="">
+              <label for=""></label>
               <label class="checkbox-label">
                 <input v-model="formData.is_active" type="checkbox" />
                 <span>Active</span>
@@ -140,16 +174,26 @@
         </form>
       </div>
     </div>
+
+    <!-- Icon Picker Modal -->
+    <IconPicker
+      v-model="formData.icon"
+      :show="showIconPicker"
+      @close="showIconPicker = false"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive } from 'vue';
-import { supabase } from '@/lib/supabase';
+import { supabase, getImageUrl } from '@/lib/supabase';
+import IconPicker from '@/components/IconPicker.vue';
+import ImageUpload from '@/components/ImageUpload.vue';
 
 interface Feature {
   id: string;
   icon: string;
+  icon_image_url?: string;
   title: string;
   description: string;
   order_position: number;
@@ -158,6 +202,8 @@ interface Feature {
 
 interface FormData {
   icon: string;
+  icon_type: 'font-awesome' | 'image';
+  icon_image_url: string;
   title: string;
   description: string;
   order_position: number;
@@ -166,15 +212,22 @@ interface FormData {
 
 export default defineComponent({
   name: 'AdminFeatures',
+  components: {
+    IconPicker,
+    ImageUpload,
+  },
   setup() {
     const loading = ref(false);
     const saving = ref(false);
     const showModal = ref(false);
+    const showIconPicker = ref(false);
     const editingFeature = ref<Feature | null>(null);
     const features = ref<Feature[]>([]);
 
     const formData = reactive<FormData>({
       icon: '',
+      icon_type: 'font-awesome',
+      icon_image_url: '',
       title: '',
       description: '',
       order_position: 1,
@@ -203,6 +256,8 @@ export default defineComponent({
         editingFeature.value = feature;
         Object.assign(formData, {
           icon: feature.icon,
+          icon_type: feature.icon_image_url ? 'image' : 'font-awesome',
+          icon_image_url: feature.icon_image_url || '',
           title: feature.title,
           description: feature.description,
           order_position: feature.order_position,
@@ -212,6 +267,8 @@ export default defineComponent({
         editingFeature.value = null;
         Object.assign(formData, {
           icon: '',
+          icon_type: 'font-awesome',
+          icon_image_url: '',
           title: '',
           description: '',
           order_position: features.value.length + 1,
@@ -230,7 +287,8 @@ export default defineComponent({
       saving.value = true;
       try {
         const featureData = {
-          icon: formData.icon,
+          icon: formData.icon_type === 'font-awesome' ? formData.icon : '',
+          icon_image_url: formData.icon_type === 'image' ? formData.icon_image_url : null,
           title: formData.title,
           description: formData.description,
           order_position: formData.order_position,
@@ -294,6 +352,7 @@ export default defineComponent({
       loading,
       saving,
       showModal,
+      showIconPicker,
       editingFeature,
       features,
       formData,
@@ -302,6 +361,7 @@ export default defineComponent({
       saveFeature,
       toggleActive,
       deleteFeature,
+      getImageUrl,
     };
   },
 });
@@ -397,6 +457,13 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.feature-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
 }
 
 .feature-icon i {
@@ -512,6 +579,41 @@ export default defineComponent({
   margin-bottom: 1.5rem;
 }
 
+.radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.radio-label:has(input:checked) {
+  background: #fef3c7;
+  border-color: #d4a948;
+}
+
+.radio-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #d4a948;
+}
+
+.radio-label span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;
@@ -523,6 +625,7 @@ export default defineComponent({
   z-index: 1000;
   padding: 2rem;
 }
+
 
 .modal-content {
   background: white;
@@ -619,6 +722,37 @@ export default defineComponent({
 .icon-preview i {
   font-size: 1.75rem;
   color: white;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-with-button .form-control {
+  flex: 1;
+  background: #f8fafc;
+}
+
+.btn-browse-icon {
+  padding: 0.625rem 1rem;
+  background: #d4a948;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-browse-icon:hover {
+  background: #c69840;
+}
+
+.btn-browse-icon i {
+  margin-right: 0.25rem;
 }
 
 .form-row {

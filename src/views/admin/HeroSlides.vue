@@ -146,7 +146,8 @@
               />
             </div>
 
-            <div class="form-group">
+            <div class="">
+              <label for="order"></label>
               <label class="checkbox-label">
                 <input v-model="formData.is_active" type="checkbox" />
                 <span>Active</span>

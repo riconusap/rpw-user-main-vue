@@ -16,14 +16,14 @@
     <div v-else class="attorneys-grid">
       <div
         v-for="attorney in attorneys"
-        :key="attorney.id"
+        :key="`${attorney.id}-${refreshKey}`"
         class="attorney-card"
         :class="{ inactive: !attorney.is_active, founder: attorney.is_founder }"
       >
         <div class="attorney-photo">
           <img
             v-if="attorney.photo"
-            :src="getImageUrl(attorney.photo)"
+            :src="getImageUrlWithCache(attorney.photo)"
             :alt="attorney.full_name"
             @error="handleImageError"
           />
@@ -41,12 +41,9 @@
           <p class="position">{{ attorney.position }}</p>
           <p v-if="attorney.bio" class="bio">{{ truncateBio(attorney.bio) }}</p>
 
-          <div class="attorney-meta">
-            <span v-if="attorney.experience_years" class="meta-item">
-              <i class="fas fa-briefcase"></i> {{ attorney.experience_years }} years
-            </span>
-            <span v-if="attorney.languages" class="meta-item">
-              <i class="fas fa-language"></i> {{ attorney.languages }}
+          <div class="attorney-meta" v-if="attorney.certificates && attorney.certificates.length > 0">
+            <span class="meta-item">
+              <i class="fas fa-certificate"></i> {{ attorney.certificates.length }} certificate{{ attorney.certificates.length > 1 ? 's' : '' }}
             </span>
           </div>
 
@@ -86,10 +83,12 @@
           <div class="form-group">
             <label>Photo</label>
             <ImageUpload
+              :key="imageUploadKey"
               v-model="formData.photo"
               folder="attorneys"
               :placeholder="'Upload attorney photo (square, 500x500px recommended)'"
               :max-size="3"
+              @uploaded="onImageUploaded"
             />
           </div>
 
@@ -130,91 +129,69 @@
             ></textarea>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="experience_years">Experience (Years)</label>
-              <input
-                id="experience_years"
-                v-model.number="formData.experience_years"
-                type="number"
-                class="form-control"
-                min="0"
-                placeholder="10"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="languages">Languages</label>
-              <input
-                id="languages"
-                v-model="formData.languages"
-                type="text"
-                class="form-control"
-                placeholder="Indonesian, English"
-              />
+          <!-- Certificates Section -->
+          <div class="form-group">
+            <label>Certificates</label>
+            <div class="certificates-list">
+              <div
+                v-for="(cert, index) in formData.certificates"
+                :key="index"
+                class="certificate-item"
+              >
+                <div class="certificate-fields">
+                  <input
+                    v-model="cert.name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Certificate Name"
+                    required
+                  />
+                  <input
+                    v-model="cert.issuer"
+                    type="text"
+                    class="form-control"
+                    placeholder="Issuing Organization"
+                    required
+                  />
+                  <input
+                    v-model="cert.year"
+                    type="text"
+                    class="form-control"
+                    placeholder="Year (e.g., 2023)"
+                    required
+                  />
+                  <button
+                    type="button"
+                    @click="removeCertificate(index)"
+                    class="btn-remove-item"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                @click="addCertificate"
+                class="btn btn-secondary btn-add"
+              >
+                <i class="fas fa-plus"></i> Add Certificate
+              </button>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="bar_admission">Bar Admission</label>
+            <label for="order">Order Position *</label>
             <input
-              id="bar_admission"
-              v-model="formData.bar_admission"
-              type="text"
+              id="order"
+              v-model.number="formData.order_position"
+              type="number"
               class="form-control"
-              placeholder="Indonesian Bar Association"
+              required
+              min="0"
             />
           </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                id="email"
-                v-model="formData.email"
-                type="email"
-                class="form-control"
-                placeholder="john@rpwadvocates.com"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input
-                id="phone"
-                v-model="formData.phone"
-                type="text"
-                class="form-control"
-                placeholder="+62-21-XXXXXXX"
-              />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="linkedin_url">LinkedIn URL</label>
-            <input
-              id="linkedin_url"
-              v-model="formData.linkedin_url"
-              type="url"
-              class="form-control"
-              placeholder="https://linkedin.com/in/username"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="order">Order Position *</label>
-              <input
-                id="order"
-                v-model.number="formData.order_position"
-                type="number"
-                class="form-control"
-                required
-                min="0"
-              />
-            </div>
-
-            <div class="form-group checkbox-group">
+          <div class="row">
+            <div class="checkbox-group col-12">
               <label class="checkbox-label">
                 <input v-model="formData.is_founder" type="checkbox" />
                 <span>Founder</span>
@@ -256,16 +233,17 @@ interface Attorney {
   position: string;
   photo: string | null;
   bio: string | null;
-  experience_years: number | null;
-  languages: string | null;
-  bar_admission: string | null;
-  email: string | null;
-  phone: string | null;
-  linkedin_url: string | null;
+  certificates: Certificate[];
   order_position: number;
   is_founder: boolean;
   is_featured: boolean;
   is_active: boolean;
+}
+
+interface Certificate {
+  name: string;
+  issuer: string;
+  year: string;
 }
 
 interface FormData {
@@ -273,12 +251,7 @@ interface FormData {
   position: string;
   photo: string;
   bio: string;
-  experience_years: number | null;
-  languages: string;
-  bar_admission: string;
-  email: string;
-  phone: string;
-  linkedin_url: string;
+  certificates: Certificate[];
   order_position: number;
   is_founder: boolean;
   is_featured: boolean;
@@ -296,18 +269,15 @@ export default defineComponent({
     const showModal = ref(false);
     const editingAttorney = ref<Attorney | null>(null);
     const attorneys = ref<Attorney[]>([]);
+    const refreshKey = ref(Date.now());
+    const imageUploadKey = ref(0);
 
     const formData = reactive<FormData>({
       full_name: '',
       position: '',
       photo: '',
       bio: '',
-      experience_years: null,
-      languages: '',
-      bar_admission: '',
-      email: '',
-      phone: '',
-      linkedin_url: '',
+      certificates: [],
       order_position: 1,
       is_founder: false,
       is_featured: false,
@@ -324,6 +294,8 @@ export default defineComponent({
 
         if (error) throw error;
         attorneys.value = data || [];
+        // Update refresh key to force re-render images with new cache-busting param
+        refreshKey.value = Date.now();
       } catch (error: any) {
         alert('Error loading attorneys: ' + error.message);
       } finally {
@@ -336,6 +308,9 @@ export default defineComponent({
     };
 
     const openModal = (attorney?: Attorney) => {
+      // Force re-render ImageUpload component
+      imageUploadKey.value++;
+      
       if (attorney) {
         editingAttorney.value = attorney;
         Object.assign(formData, {
@@ -343,12 +318,7 @@ export default defineComponent({
           position: attorney.position,
           photo: attorney.photo || '',
           bio: attorney.bio || '',
-          experience_years: attorney.experience_years,
-          languages: attorney.languages || '',
-          bar_admission: attorney.bar_admission || '',
-          email: attorney.email || '',
-          phone: attorney.phone || '',
-          linkedin_url: attorney.linkedin_url || '',
+          certificates: attorney.certificates || [],
           order_position: attorney.order_position,
           is_founder: attorney.is_founder,
           is_featured: attorney.is_featured,
@@ -361,12 +331,7 @@ export default defineComponent({
           position: '',
           photo: '',
           bio: '',
-          experience_years: null,
-          languages: '',
-          bar_admission: '',
-          email: '',
-          phone: '',
-          linkedin_url: '',
+          certificates: [],
           order_position: attorneys.value.length + 1,
           is_founder: false,
           is_featured: false,
@@ -381,6 +346,25 @@ export default defineComponent({
       editingAttorney.value = null;
     };
 
+    const onImageUploaded = (data: { path: string; url: string }) => {
+      // Ensure formData is updated with the new path
+      formData.photo = data.path;
+      // Force refresh key to update any cached images
+      refreshKey.value = Date.now();
+    };
+
+    const addCertificate = () => {
+      formData.certificates.push({
+        name: '',
+        issuer: '',
+        year: '',
+      });
+    };
+
+    const removeCertificate = (index: number) => {
+      formData.certificates.splice(index, 1);
+    };
+
     const saveAttorney = async () => {
       saving.value = true;
       try {
@@ -389,12 +373,7 @@ export default defineComponent({
           position: formData.position,
           photo: formData.photo || null,
           bio: formData.bio || null,
-          experience_years: formData.experience_years,
-          languages: formData.languages || null,
-          bar_admission: formData.bar_admission || null,
-          email: formData.email || null,
-          phone: formData.phone || null,
-          linkedin_url: formData.linkedin_url || null,
+          certificates: formData.certificates || [],
           order_position: formData.order_position,
           is_founder: formData.is_founder,
           is_featured: formData.is_featured,
@@ -450,6 +429,11 @@ export default defineComponent({
       }
     };
 
+    const getImageUrlWithCache = (photo: string) => {
+      const baseUrl = getImageUrl(photo);
+      return `${baseUrl}?t=${refreshKey.value}`;
+    };
+
     const handleImageError = (event: Event) => {
       const target = event.target as HTMLImageElement;
       target.src = '/img/user.jpg';
@@ -466,13 +450,19 @@ export default defineComponent({
       editingAttorney,
       attorneys,
       formData,
+      refreshKey,
+      imageUploadKey,
       openModal,
       closeModal,
       saveAttorney,
+      onImageUploaded,
+      addCertificate,
+      removeCertificate,
       toggleActive,
       deleteAttorney,
       truncateBio,
       getImageUrl,
+      getImageUrlWithCache,
       handleImageError,
     };
   },
@@ -805,28 +795,6 @@ export default defineComponent({
   gap: 1rem;
 }
 
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: #f8fafc;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.checkbox-label input {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -853,5 +821,55 @@ export default defineComponent({
     width: 100%;
     justify-content: center;
   }
+
+  .certificate-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Certificates Styling */
+.certificates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.certificate-item {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.certificate-fields {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-remove-item {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-item:hover {
+  background: #dc2626;
+}
+
+.btn-add {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 </style>

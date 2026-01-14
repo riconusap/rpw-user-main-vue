@@ -36,7 +36,7 @@
                   {{ slide.subtitle }}
                 </h5>
                 <h1 class="display-3 text-white mb-md-4">{{ slide.title }}</h1>
-                <p v-if="slide.description" class="text-white mb-md-4">{{ slide.description }}</p>
+                <p v-if="slide.description !== '-'" class="text-white mb-md-4">{{ slide.description }}</p>
                 <a 
                   v-if="slide.cta_text && slide.cta_link" 
                   :href="slide.cta_link" 

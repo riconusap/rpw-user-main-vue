@@ -8,8 +8,11 @@
           </div>
           <div data-aos="fade-left" data-aos-duration="1000" class="col-lg-7 mt-5 mt-lg-0">
             <h1 class="mt-2 mb-3">About Our Firm</h1>
-            <h4>R .PRAMA WIJAWA & PARTNERS</h4>
-            <p class="mb-4">
+            <h4>{{ settings?.site_name || 'R. PRAMA WIJAWA & PARTNERS' }}</h4>
+            
+            <p class="mb-4 text-justify" v-if="settings?.site_description" v-html="settings.site_description">
+            </p>
+            <p class="mb-4 text-justify" v-else>
               Our firm is focused on the results. With exceptional experiences and depth of knowledge, we delivers a
               practical and objective solutions to solving your legal problems. Our mindset is understanding what your
               needs and deliver a top notch legal services.
@@ -25,7 +28,7 @@
           </div>
         </div>
         <div data-aos="fade-right" class="row mt-4">
-          <div class="col-md-4">
+          <div v-if="settings?.contact_email" class="col-md-4">
             <div class="card border-0">
               <div class="card-header bg-transparent border-0">
                 <h5 class="font-weight-bold">Email</h5>
@@ -33,12 +36,16 @@
               <div class="card-body d-flex align-items-center">
                 <i class="fa fa-2x fa-envelope-open text-primary mr-3"></i>
                 <div class="d-flex flex-column">
-                  <p class="m-0">proxy@rpwadvocates.com</p>
+                  <p class="m-0">
+                    <a :href="`mailto:${settings.contact_email}`" class="text-dark">
+                      {{ settings.contact_email }}
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div v-if="settings?.contact_phone" class="col-md-4">
             <div class="card border-0">
               <div class="card-header bg-transparent border-0">
                 <h5 class="font-weight-bold">Phone</h5>
@@ -46,12 +53,16 @@
               <div class="card-body d-flex align-items-center">
                 <i class="fa fa-2x fa-phone-alt text-primary mr-3"></i>
                 <div class="d-flex flex-column">
-                  <p class="m-0">(021) - 29557422</p>
+                  <p class="m-0">
+                    <a :href="`tel:${settings.contact_phone}`" class="text-dark">
+                      {{ settings.contact_phone }}
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div v-if="settings?.contact_address" class="col-md-4">
             <div class="card border-0">
               <div class="card-header bg-transparent border-0">
                 <h5 class="font-weight-bold">Office</h5>
@@ -59,7 +70,7 @@
               <div class="card-body d-flex align-items-center">
                 <i class="fas fa-2x fa-building text-primary mr-3"></i>
                 <div class="d-flex flex-column">
-                  <p class="m-0">Jakarta, Indonesia</p>
+                  <p class="m-0">{{ settings.contact_address }}</p>
                 </div>
               </div>
             </div>
@@ -71,12 +82,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
+import { useSettings } from '@/composables/useSettings';
 
 export default defineComponent({
   name: 'AboutSection',
   setup() {
-    return {};
+    const { settings, loadSettings } = useSettings();
+
+    onMounted(() => {
+      loadSettings();
+    });
+
+    return {
+      settings,
+    };
   },
 });
 </script>

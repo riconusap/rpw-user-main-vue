@@ -38,6 +38,11 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/Attorneys.vue'),
       },
       {
+        path: 'clients',
+        name: 'AdminClients',
+        component: () => import('@/views/admin/Clients.vue'),
+      },
+      {
         path: 'articles',
         name: 'AdminArticles',
         component: () => import('@/views/admin/Articles.vue'),

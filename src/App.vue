@@ -67,6 +67,29 @@ export default defineComponent({
 </script>
 
 <style>
+/* Global Font - Raleway for entire application */
+body,
+html,
+h1, h2, h3, h4, h5, h6,
+p, span, a, button, input, textarea, select,
+div:not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]) {
+  font-family: 'Raleway', sans-serif !important;
+}
+
+/* Preserve icon fonts */
+i[class*="fa-"],
+i.fas,
+i.far,
+i.fab,
+i.fal,
+.fa,
+.fas,
+.far,
+.fab,
+.fal {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", "FontAwesome" !important;
+}
+
 /* Global styles can be placed here */
 
 /* Global Loading Overlay */

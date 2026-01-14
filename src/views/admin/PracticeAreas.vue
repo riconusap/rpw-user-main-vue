@@ -21,7 +21,8 @@
         :class="{ inactive: !area.is_active, featured: area.is_featured }"
       >
         <div class="area-icon">
-          <i :class="area.icon"></i>
+          <img v-if="area.icon_image_url" :src="getImageUrl(area.icon_image_url, 'icons')" alt="icon" />
+          <i v-else :class="area.icon"></i>
         </div>
         <div class="area-content">
           <h3>{{ area.title }}</h3>
@@ -69,23 +70,55 @@
         </div>
 
         <form @submit.prevent="saveArea" class="modal-body">
-          <div class="form-group">
+          <div class="">
+            <label>Icon Type *</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input v-model="formData.icon_type" type="radio" value="font-awesome" />
+                <span>Font Awesome Icon</span>
+              </label>
+              <label class="radio-label">
+                <input v-model="formData.icon_type" type="radio" value="image" />
+                <span>Upload Image</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Font Awesome Icon -->
+          <div v-if="formData.icon_type === 'font-awesome'" class="form-group">
             <label for="icon">Icon Class *</label>
-            <input
-              id="icon"
-              v-model="formData.icon"
-              type="text"
-              class="form-control"
-              required
-              placeholder="fas fa-gavel"
-            />
-            <small class="form-help">
-              Browse icons at
-              <a href="https://fontawesome.com/icons" target="_blank">FontAwesome</a>
-            </small>
+            <div class="input-with-button">
+              <input
+                id="icon"
+                v-model="formData.icon"
+                type="text"
+                class="form-control"
+                :required="formData.icon_type === 'font-awesome'"
+                placeholder="fas fa-gavel"
+                readonly
+              />
+              <button
+                type="button"
+                @click="showIconPicker = true"
+                class="btn-browse-icon"
+              >
+                <i class="fas fa-icons"></i> Browse Icons
+              </button>
+            </div>
             <div class="icon-preview">
               <i :class="formData.icon"></i>
             </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div v-if="formData.icon_type === 'image'" class="form-group">
+            <label>Icon Image *</label>
+            <ImageUpload
+              v-model="formData.icon_image_url"
+              :bucket="'icons'"
+              :label="'Upload Icon'"
+            />
+            <small class="form-help">Recommended: Square image (64x64px or larger), PNG with transparent background</small>
           </div>
 
           <div class="form-group">
@@ -139,8 +172,10 @@
                 min="0"
               />
             </div>
+          </div>
 
-            <div class="form-group checkbox-group">
+          <div class="form-row w-100">
+            <div class="checkbox-group">
               <label class="checkbox-label">
                 <input v-model="formData.is_featured" type="checkbox" />
                 <span>Featured</span>
@@ -164,16 +199,26 @@
         </form>
       </div>
     </div>
+
+    <!-- Icon Picker Modal -->
+    <IconPicker
+      v-model="formData.icon"
+      :show="showIconPicker"
+      @close="showIconPicker = false"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive } from 'vue';
-import { supabase } from '@/lib/supabase';
+import { supabase, getImageUrl } from '@/lib/supabase';
+import IconPicker from '@/components/IconPicker.vue';
+import ImageUpload from '@/components/ImageUpload.vue';
 
 interface PracticeArea {
   id: string;
   icon: string;
+  icon_image_url?: string;
   title: string;
   slug: string;
   description: string;
@@ -184,6 +229,8 @@ interface PracticeArea {
 
 interface FormData {
   icon: string;
+  icon_type: 'font-awesome' | 'image';
+  icon_image_url: string;
   title: string;
   slug: string;
   description: string;
@@ -194,15 +241,22 @@ interface FormData {
 
 export default defineComponent({
   name: 'AdminPracticeAreas',
+  components: {
+    IconPicker,
+    ImageUpload,
+  },
   setup() {
     const loading = ref(false);
     const saving = ref(false);
     const showModal = ref(false);
+    const showIconPicker = ref(false);
     const editingArea = ref<PracticeArea | null>(null);
     const areas = ref<PracticeArea[]>([]);
 
     const formData = reactive<FormData>({
       icon: '',
+      icon_type: 'font-awesome',
+      icon_image_url: '',
       title: '',
       slug: '',
       description: '',
@@ -242,6 +296,8 @@ export default defineComponent({
         editingArea.value = area;
         Object.assign(formData, {
           icon: area.icon,
+          icon_type: area.icon_image_url ? 'image' : 'font-awesome',
+          icon_image_url: area.icon_image_url || '',
           title: area.title,
           slug: area.slug,
           description: area.description,
@@ -253,6 +309,8 @@ export default defineComponent({
         editingArea.value = null;
         Object.assign(formData, {
           icon: '',
+          icon_type: 'font-awesome',
+          icon_image_url: '',
           title: '',
           slug: '',
           description: '',
@@ -273,7 +331,8 @@ export default defineComponent({
       saving.value = true;
       try {
         const areaData = {
-          icon: formData.icon,
+          icon: formData.icon_type === 'font-awesome' ? formData.icon : '',
+          icon_image_url: formData.icon_type === 'image' ? formData.icon_image_url : null,
           title: formData.title,
           slug: formData.slug,
           description: formData.description,
@@ -353,6 +412,7 @@ export default defineComponent({
       loading,
       saving,
       showModal,
+      showIconPicker,
       editingArea,
       areas,
       formData,
@@ -363,6 +423,7 @@ export default defineComponent({
       toggleFeatured,
       toggleActive,
       deleteArea,
+      getImageUrl,
     };
   },
 });
@@ -469,6 +530,14 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.area-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
 }
 
 .area-icon i {
@@ -489,7 +558,6 @@ export default defineComponent({
 .slug {
   font-size: 0.75rem;
   color: #94a3b8;
-  font-family: monospace;
   margin-bottom: 0.5rem;
 }
 
@@ -698,6 +766,41 @@ export default defineComponent({
   text-decoration: underline;
 }
 
+.radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.radio-label:has(input:checked) {
+  background: #fef3c7;
+  border-color: #d4a948;
+}
+
+.radio-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #d4a948;
+}
+
+.radio-label span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
 .icon-preview {
   margin-top: 1rem;
   width: 60px;
@@ -714,6 +817,37 @@ export default defineComponent({
   color: white;
 }
 
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-with-button .form-control {
+  flex: 1;
+  background: #f8fafc;
+}
+
+.btn-browse-icon {
+  padding: 0.625rem 1rem;
+  background: #d4a948;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-browse-icon:hover {
+  background: #c69840;
+}
+
+.btn-browse-icon i {
+  margin-right: 0.25rem;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -722,7 +856,7 @@ export default defineComponent({
 
 .checkbox-group {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.5rem;
 }
 

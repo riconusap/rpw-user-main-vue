@@ -14,6 +14,9 @@
 
     <!-- Articles Section -->
     <ArticlesSection />
+
+    <!-- Clients Section -->
+    <ClientsSection />
   </div>
 </template>
 
@@ -23,6 +26,7 @@ import { useSEO, seoConfigs } from '@/composables/useSEO';
 import HeroCarousel from '@/components/HeroCarousel.vue';
 import AboutSection from '@/components/AboutSection.vue';
 import ServicesSection from '@/components/ServicesSection.vue';
+import ClientsSection from '@/components/ClientsSection.vue';
 import TeamSection from '@/components/TeamSection.vue';
 import ArticlesSection from '@/components/ArticlesSection.vue';
 
@@ -32,6 +36,7 @@ export default defineComponent({
     HeroCarousel,
     AboutSection,
     ServicesSection,
+    ClientsSection,
     TeamSection,
     ArticlesSection,
   },

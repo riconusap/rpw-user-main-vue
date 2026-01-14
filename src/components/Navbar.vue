@@ -3,7 +3,13 @@
     <div class="container-lg p-0">
       <nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
         <RouterLink to="/" class="navbar-brand">
-          <img src="/img/logo.png" width="100px" alt="R. Prama Wijaya Law Firm" />
+          <img 
+            v-if="settings?.site_logo" 
+            :src="getImageUrl(settings.site_logo, 'images')" 
+            width="100px" 
+            :alt="settings.site_name || 'Logo'" 
+          />
+          <img v-else src="/img/logo.png" width="100px" alt="R. Prama Wijaya Law Firm" />
         </RouterLink>
         <button
           type="button"
@@ -30,12 +36,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
+import { useSettings } from '@/composables/useSettings';
+import { getImageUrl } from '@/lib/supabase';
 
 export default defineComponent({
   name: 'Navbar',
   setup() {
-    return {};
+    const { settings, loadSettings } = useSettings();
+
+    onMounted(() => {
+      loadSettings();
+    });
+
+    return {
+      settings,
+      getImageUrl,
+    };
   },
 });
 </script>

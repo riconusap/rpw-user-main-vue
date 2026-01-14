@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, watch } from 'vue';
 import { uploadImage, deleteImage, getImageUrl } from '@/lib/supabase';
 
 export default defineComponent({
@@ -84,7 +84,14 @@ export default defineComponent({
     const uploading = ref(false);
     const uploadProgress = ref(0);
     const error = ref('');
-    const imageKey = ref(0); // Force re-render of image
+    const imageKey = ref(Date.now()); // Force re-render of image
+
+    // Watch for changes in modelValue and update imageKey to force reload
+    watch(() => props.modelValue, (newValue) => {
+      if (newValue) {
+        imageKey.value = Date.now();
+      }
+    });
 
     const acceptText = props.accept
       .split(',')
@@ -97,7 +104,8 @@ export default defineComponent({
       if (props.modelValue) {
         const url = getImageUrl(props.modelValue, props.bucket);
         // Add cache-busting parameter with imageKey to force reload
-        return `${url}?v=${imageKey.value}`;
+        // Use both imageKey and a random component to ensure fresh load
+        return `${url}?v=${imageKey.value}&t=${Date.now()}`;
       }
       return '';
     });
@@ -236,13 +244,19 @@ export default defineComponent({
 .preview {
   position: relative;
   width: 100%;
-  height: 300px;
+  max-height: 400px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
 }
 
 .preview img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
 }
 
 .overlay {

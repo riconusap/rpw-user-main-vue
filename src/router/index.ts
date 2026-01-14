@@ -28,6 +28,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'About',
     component: () => import('@/views/About.vue'),
   },
+  {
+    path: '/services',
+    name: 'Services',
+    component: () => import('@/views/Services.vue'),
+  },
   // Admin routes
   ...adminRoutes,
 ];

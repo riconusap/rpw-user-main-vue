@@ -1,5 +1,5 @@
 <template>
-  <section id="project" data-aos="fade-up" data-aos-duration="1000">
+  <section id="project" v-if="articles.length > 0" data-aos="fade-up" data-aos-duration="1000">
     <div class="container-fluid pt-5">
       <div class="container">
         <div class="text-center">

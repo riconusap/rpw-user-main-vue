@@ -322,7 +322,6 @@ export default defineComponent({
   background: #f1f5f9;
   padding: 2px 6px;
   border-radius: 4px;
-  font-family: monospace;
   font-size: 0.9em;
 }
 </style>

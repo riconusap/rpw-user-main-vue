@@ -140,6 +140,7 @@
               id="slug"
               v-model="formData.slug"
               type="text"
+              disabled
               class="form-control"
               required
               placeholder="corporate-law"
@@ -283,12 +284,10 @@ export default defineComponent({
     };
 
     const generateSlug = () => {
-      if (!editingArea.value) {
-        formData.slug = formData.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      }
+      formData.slug = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
     };
 
     const openModal = (area?: PracticeArea) => {

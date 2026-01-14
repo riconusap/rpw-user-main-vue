@@ -23,15 +23,31 @@
       <div v-else>
         <!-- Founder Section -->
         <div v-if="founder" class="row d-flex align-items-center justify-content-center">
-          <div class="col-lg-4">
-            <img :src="getImageUrl(founder.photo)" class="w-100 rounded shadow" :alt="founder.name" @error="handleImageError">
+          <div class="col-lg-4 position-relative founder-image-wrapper">
+            <img :src="getImageUrl(founder.photo)" class="w-100 rounded shadow" :alt="founder.full_name" @error="handleImageError">
+            <RouterLink 
+              :to="`/attorneys/${founder.id}`" 
+              class="founder-overlay d-flex align-items-center justify-content-center"
+            >
+              <span class="view-profile-text">
+                <i class="fas fa-user"></i> View Full Profile
+              </span>
+            </RouterLink>
           </div>
           <div class="col-lg-8 d-flex flex-column justify-content-around">
             <div class="people-name d-flex flex-column text-center justify-content-center align-items-center">
               <h4>FOUNDER</h4>
-              <h4>{{ founder.name }}</h4>
+              <h4>{{ founder.full_name }}</h4>
             </div>
             <p>{{ founder.bio }}</p>
+            <div class="text-center mt-3">
+              <RouterLink 
+                :to="`/attorneys/${founder.id}`" 
+                class="btn btn-primary"
+              >
+                <i class="fas fa-eye"></i> View Full Profile
+              </RouterLink>
+            </div>
           </div>
         </div>
 
@@ -47,24 +63,24 @@
                     class="team-item"
                   >
                     <div class="position-relative">
-                      <img class="img-fluid w-100" :src="getImageUrl(associate.photo)" :alt="associate.name" @error="handleImageError">
+                      <img class="img-fluid w-100" :src="getImageUrl(associate.photo)" :alt="associate.full_name" @error="handleImageError">
                       <div class="team-overlay position-absolute d-flex align-items-center justify-content-center m-3">
                         <div class="d-flex align-items-center justify-content-start">
-                          <a 
+                          <RouterLink
+                            :to="`/attorneys/${associate.id}`"
                             class="btn btn-outline-secondary rounded-circle text-center mr-2 px-0" 
                             style="width: 38px; height: 38px;" 
-                            href="#"
                             data-toggle="tooltip" 
                             data-placement="top" 
-                            title="Detail"
+                            title="View Profile"
                           >
                             <i class="fas fa-eye"></i>
-                          </a>
+                          </RouterLink>
                         </div>
                       </div>
                     </div>
                     <div class="border border-top-0 text-center" style="padding: 30px;">
-                      <h5 class="font-weight-bold">{{ associate.name }}</h5>
+                      <h5 class="font-weight-bold">{{ associate.full_name }}</h5>
                       <span>{{ associate.position }}</span>
                     </div>
                   </div>
@@ -73,7 +89,6 @@
             </div>
           </div>
         </div>
-
         <div v-if="!founder && associates.length === 0" class="alert alert-info">
           No attorneys available. Please add attorneys in the admin panel.
         </div>
@@ -90,7 +105,7 @@ import { supabase, getImageUrl } from '@/lib/supabase';
 
 interface Attorney {
   id: string;
-  name: string;
+  full_name: string;
   position: string;
   photo: string;
   bio: string;
@@ -203,4 +218,75 @@ export default defineComponent({
 .people-name h4 {
   margin: 10px 0;
 }
+
+.team-overlay {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.team-item:hover .team-overlay {
+  opacity: 1;
+}
+
+/* Founder Section */
+.founder-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.founder-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(26, 26, 46, 0.7) 0%, rgba(26, 26, 46, 0.9) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.founder-image-wrapper:hover .founder-overlay {
+  opacity: 1;
+}
+
+.view-profile-text {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #d4a948 0%, #c69840 100%);
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(212, 169, 72, 0.3);
+  transition: all 0.3s ease;
+}
+
+.founder-overlay:hover .view-profile-text {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(212, 169, 72, 0.4);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d4a948 0%, #c69840 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 169, 72, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #c69840 0%, #b88738 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 169, 72, 0.4);
+}
 </style>
+

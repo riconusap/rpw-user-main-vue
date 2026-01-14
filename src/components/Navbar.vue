@@ -24,7 +24,7 @@
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
           <div class="navbar-nav ml-auto py-0">
-            <RouterLink to="/teams" class="nav-item nav-link">Our Attorney</RouterLink>
+            <RouterLink to="/attorneys" class="nav-item nav-link">Our Attorney</RouterLink>
             <RouterLink to="/articles" class="nav-item nav-link">Articles</RouterLink>
             <RouterLink to="/about" class="nav-item nav-link">About Us</RouterLink>
             <RouterLink to="/contact" class="nav-item nav-link">Contact Us</RouterLink>

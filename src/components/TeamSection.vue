@@ -9,7 +9,7 @@
               We provide comprehensive and integrated answers, so it will eliminate doubts for individuals, business
               people and even companies to be able to take strategic steps legally
             </h4>
-            <RouterLink to="/teams" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold">
+            <RouterLink to="/attorneys" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold">
               Meet All Experts
             </RouterLink>
           </div>
@@ -28,7 +28,7 @@
                   >
                     <div class="d-flex align-items-center justify-content-start">
                       <RouterLink
-                        to="/teams"
+                        :to="`/attorneys/${attorney.id}`"
                         class="btn btn-outline-secondary rounded-circle text-center mr-2 px-0"
                         style="width: 38px; height: 38px"
                       >

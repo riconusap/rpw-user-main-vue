@@ -9,9 +9,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Home.vue'),
   },
   {
-    path: '/teams',
+    path: '/attorneys',
     name: 'OurAttorney',
     component: () => import('@/views/Teams.vue'),
+  },
+  {
+    path: '/attorneys/:id',
+    name: 'AttorneyDetail',
+    component: () => import('@/views/AttorneyDetail.vue'),
   },
   {
     path: '/articles',

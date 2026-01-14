@@ -8,6 +8,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
+# Copy env.example to .env
+RUN cp .env.example .env
+
 # Install dependencies
 RUN npm ci
 
@@ -28,6 +31,9 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+# Copy env.example to .env
+RUN cp .env.example .env
 
 # Install dependencies
 RUN npm ci

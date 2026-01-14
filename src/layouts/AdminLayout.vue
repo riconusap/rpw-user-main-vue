@@ -74,7 +74,7 @@ export default defineComponent({
     const menuItems = [
       { path: '/admin', label: 'Dashboard', icon: 'fas fa-home' },
       { path: '/admin/hero-slides', label: 'Hero Slides', icon: 'fas fa-image' },
-      { path: '/admin/features', label: 'Features', icon: 'fas fa-star' },
+      // { path: '/admin/features', label: 'Features', icon: 'fas fa-star' },
       { path: '/admin/practice-areas', label: 'Practice Areas', icon: 'fas fa-gavel' },
       { path: '/admin/attorneys', label: 'Attorneys', icon: 'fas fa-user-tie' },
       { path: '/admin/clients', label: 'Clients', icon: 'fas fa-briefcase' },

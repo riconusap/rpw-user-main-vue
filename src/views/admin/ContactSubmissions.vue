@@ -92,7 +92,7 @@
             <td class="date-cell">{{ formatDate(submission.created_at) }}</td>
             <td class="actions-cell" @click.stop>
               <button
-                @click="updateStatus(submission, 'replied')"
+                @click="viewSubmission(submission)"
                 class="btn-icon"
                 title="Mark as replied"
               >

@@ -22,7 +22,7 @@
             <div v-else-if="attorneys.length > 0" class="owl-carousel team-carousel" data-aos="fade-right" data-aos-duration="2000" ref="teamCarousel">
               <div v-for="attorney in attorneys" :key="attorney.id" class="team-item">
                 <div class="position-relative">
-                  <img class="img-fluid w-100" :src="getImageUrl(attorney.photo)" :alt="attorney.name" @error="handleImageError" />
+                  <img class="img-fluid w-100" :src="getImageUrl(attorney.photo)" :alt="attorney.full_name" @error="handleImageError" />
                   <div
                     class="team-overlay position-absolute d-flex align-items-center justify-content-center m-3"
                   >
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <div class="border border-top-0 text-center" style="padding: 30px">
-                  <h5 class="font-weight-bold">{{ attorney.name }}</h5>
+                  <p class="font-weight-bold" :style="{ fontSize: '1rem' }">{{ attorney.full_name }}</p>
                   <span>{{ attorney.position }}</span>
                 </div>
               </div>
@@ -61,7 +61,7 @@ import 'owl.carousel';
 
 interface Attorney {
   id: string;
-  name: string;
+  full_name: string;
   position: string;
   photo: string;
   bio: string;
@@ -106,18 +106,18 @@ export default defineComponent({
             margin: 30,
             dots: false,
             loop: true,
+            autoWidth: true,
             responsive: {
               0: {
                 items: 1,
+                autoWidth: false,
               },
               576: {
                 items: 2,
+                autoWidth: false,
               },
               768: {
-                items: 3,
-              },
-              992: {
-                items: 4,
+                autoWidth: true,
               },
             },
           });
@@ -154,5 +154,52 @@ export default defineComponent({
 
 .team-item:hover .team-overlay {
   opacity: 1;
+}
+
+/* Dynamic Width based on content */
+.team-item {
+  width: auto !important;
+  min-width: 300px;
+  max-width: 350px;
+}
+
+.team-item .position-relative {
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.team-item .position-relative img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.team-item .border {
+  overflow: visible;
+}
+
+.team-item .font-weight-bold {
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .team-item {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  .team-item .border {
+    white-space: normal;
+  }
+  
+  .team-item .font-weight-bold {
+    white-space: normal;
+  }
 }
 </style>

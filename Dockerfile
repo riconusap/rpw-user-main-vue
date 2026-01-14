@@ -8,14 +8,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Copy env.example to .env
-RUN cp .env.example .env
-
 # Install dependencies
 RUN npm ci
 
 # Copy source code
 COPY . .
+
+# Copy env.example to .env
+RUN cp .env.example .env
 
 # Expose Vite dev server port
 EXPOSE 3000
@@ -32,14 +32,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Copy env.example to .env
-RUN cp .env.example .env
-
 # Install dependencies
 RUN npm ci
 
 # Copy source code
 COPY . .
+
+# Copy env.example to .env
+RUN cp .env.example .env
 
 # Build application
 RUN npm run build

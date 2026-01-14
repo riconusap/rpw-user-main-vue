@@ -67,7 +67,7 @@ export default defineComponent({
     },
   },
   emits: ['close', 'select', 'update:modelValue'],
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const searchQuery = ref('');
     const selectedCategory = ref('all');
 

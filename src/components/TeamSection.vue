@@ -39,7 +39,13 @@
                 </div>
                 <div class="border border-top-0 text-center" style="padding: 30px">
                   <p class="font-weight-bold" :style="{ fontSize: '1rem' }">{{ attorney.full_name }}</p>
-                  <span>{{ attorney.position }}</span>
+                  <span class="d-block mb-3">{{ attorney.position }}</span>
+                  <RouterLink 
+                    :to="`/attorneys/${attorney.id}`"
+                    class="btn btn-sm btn-outline-primary btn-detail-mobile"
+                  >
+                    <i class="fas fa-info-circle mr-1"></i> Lihat Detail
+                  </RouterLink>
                 </div>
               </div>
             </div>
@@ -187,8 +193,17 @@ export default defineComponent({
   line-height: 1.4;
 }
 
+/* Hide detail button on desktop, show on mobile */
+.btn-detail-mobile {
+  display: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 767px) {
+  .btn-detail-mobile {
+    display: inline-block;
+  }
+  
   .team-item {
     width: 100% !important;
     max-width: 100%;

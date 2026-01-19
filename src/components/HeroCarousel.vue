@@ -30,9 +30,10 @@
               :alt="slide.title"
               @error="handleImageError"
             />
+            
             <div class="carousel-caption d-flex align-items-center justify-content-center">
-              <div class="p-5" style="width: 100%; max-width: 900px">
-                <h5 v-if="slide.subtitle" class="text-white text-uppercase mb-md-3">
+              <div class="p-5" style="width: 100%; max-width: 900px;">
+                <h5 v-if="slide.subtitle" class="text-white mb-md-3">
                   {{ slide.subtitle }}
                 </h5>
                 <h1 class="display-3 text-white mb-md-4">{{ slide.title }}</h1>
@@ -125,5 +126,120 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Component-specific styles if needed */
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .carousel-item {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel-item img {
+    height: 100vh !important;
+    object-fit: cover !important;
+    object-position: center;
+  }
+
+  /* Logo positioning */
+  .hero-logo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 15;
+    width: 140px;
+  }
+
+  .hero-logo img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  }
+
+  .carousel-caption {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    padding: 0 !important;
+    background: none !important;
+    height: auto !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    clip-path: polygon(0 25%, 100% 0%, 100% 100%, 0 100%);
+  }
+
+  .carousel-caption .p-5 {
+    padding: 3rem 2rem 2.5rem 2rem !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background-color: #E8E3D6 !important;
+    position: relative;
+    min-height: 32vh;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .carousel-caption h5 {
+    font-size: 0.75rem !important;
+    margin-bottom: 1rem !important;
+    letter-spacing: 3px;
+    color: #4A5568 !important;
+    font-weight: 500;
+    display: none !important;
+  }
+
+  .carousel-caption h1 {
+    font-size: 2.25rem !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0 !important;
+    font-weight: 700;
+    color: #2C4058 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    max-width: 90%;
+  }
+
+  .carousel-caption p {
+    font-size: 0.9rem !important;
+    margin-bottom: 1rem !important;
+    display: none !important;
+  }
+
+  .carousel-caption .btn {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9rem !important;
+    display: none !important;
+  }
+
+  .carousel-indicators {
+    bottom: 20px;
+    z-index: 10;
+  }
+
+  .carousel-indicators li {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+  }
+
+  .carousel-indicators .active {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Tablet and desktop */
+@media (min-width: 769px) {
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .hero-logo {
+    display: none;
+  }
+}
 </style>

@@ -48,7 +48,7 @@ import { supabase, getImageUrl } from '@/lib/supabase';
 
 interface Founder {
   id: string;
-  name: string;
+  full_name: string;
   photo: string;
   bio: string;
   order_position: number;

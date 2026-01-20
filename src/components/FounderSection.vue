@@ -49,7 +49,7 @@ import { supabase, getImageUrl } from '@/lib/supabase';
 interface Founder {
   id: string;
   name: string;
-  photo_url: string;
+  photo: string;
   bio: string;
   order_position: number;
   is_active: boolean;

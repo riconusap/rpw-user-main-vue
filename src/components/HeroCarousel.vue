@@ -5,7 +5,7 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <div v-else-if="slides.length > 0" class="container-fluid p-0 mb-5">
+    <div v-else-if="slides.length > 0" class="container-fluid p-0 hero-container">
       <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
         <ol class="carousel-indicators">
           <li 
@@ -126,8 +126,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.hero-container {
+  margin-bottom: 5rem;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
+  .hero-container {
+    margin-bottom: 0 !important;
+  }
+
   .carousel-item {
     position: relative;
     overflow: hidden;

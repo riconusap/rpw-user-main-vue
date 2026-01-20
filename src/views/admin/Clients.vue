@@ -23,7 +23,7 @@
         <div class="client-logo">
           <img v-if="client.logo_url" :src="getImageUrl(client.logo_url, 'clients')" :alt="client.name" />
           <div v-else class="logo-placeholder">
-            <i class="fas fa-building"></i>
+            <span class="client-name-text">{{ client.name }}</span>
           </div>
         </div>
         <div class="client-content">
@@ -79,13 +79,13 @@
           </div>
 
           <div class="form-group">
-            <label>Logo *</label>
+            <label>Logo (Optional)</label>
             <ImageUpload
               v-model="formData.logo_url"
               :bucket="'clients'"
               :label="'Upload Logo'"
             />
-            <small class="form-help">Recommended: PNG with transparent background, max 500KB</small>
+            <small class="form-help">Optional. If not provided, the client name will be displayed instead. Recommended: PNG with transparent background, max 500KB</small>
           </div>
 
           <div class="form-row">
@@ -434,8 +434,19 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #cbd5e1;
-  font-size: 2.5rem;
+  color: #475569;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+
+.client-name-text {
+  display: block;
+  word-wrap: break-word;
+  line-height: 1.4;
 }
 
 .client-content {

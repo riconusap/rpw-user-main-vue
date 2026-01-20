@@ -3,8 +3,17 @@
     <!-- Hero Carousel Section -->
     <HeroCarousel />
 
+    <!-- Intro Section -->
+    <IntroSection />
+
     <!-- About Section -->
     <AboutSection />
+
+    <!-- Value Proposition Section -->
+    <ValuePropositionSection />
+
+    <!-- Founder Section -->
+    <FounderSection />
 
     <!-- Services Section -->
     <ServicesSection />
@@ -37,6 +46,9 @@ import { defineComponent, onMounted, computed } from 'vue';
 import { useSEO, seoConfigs } from '@/composables/useSEO';
 import { useSettings } from '@/composables/useSettings';
 import HeroCarousel from '@/components/HeroCarousel.vue';
+import IntroSection from '@/components/IntroSection.vue';
+import ValuePropositionSection from '@/components/ValuePropositionSection.vue';
+import FounderSection from '@/components/FounderSection.vue';
 import AboutSection from '@/components/AboutSection.vue';
 import ServicesSection from '@/components/ServicesSection.vue';
 import ClientsSection from '@/components/ClientsSection.vue';
@@ -46,7 +58,10 @@ import ArticlesSection from '@/components/ArticlesSection.vue';
 export default defineComponent({
   name: 'Home',
   components: {
+    IntroSection,
     HeroCarousel,
+    ValuePropositionSection,
+    FounderSection,
     AboutSection,
     ServicesSection,
     ClientsSection,

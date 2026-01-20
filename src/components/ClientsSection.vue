@@ -24,11 +24,15 @@
         >
           <div class="client-logo-wrapper">
             <img
+              v-if="client.logo_url"
               :src="getImageUrl(client.logo_url, 'clients')"
               :alt="client.name"
               :title="client.name"
               class="client-logo"
             />
+            <div v-else class="client-name-display">
+              <span>{{ client.name }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -147,6 +151,21 @@ export default defineComponent({
 .client-logo-wrapper:hover .client-logo {
   filter: grayscale(0%);
   opacity: 1;
+}
+
+.client-name-display {
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6c757d;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.client-logo-wrapper:hover .client-name-display {
+  color: #495057;
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {

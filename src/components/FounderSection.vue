@@ -12,7 +12,7 @@
         <div class="founder-photo">
           <img 
             :src="founder.photo ? getImageUrl(founder.photo) : '/img/team-placeholder.jpg'" 
-            :alt="founder.name"
+            :alt="founder.full_name"
             @error="handleImageError"
           />
         </div>

@@ -22,7 +22,7 @@
             <div v-else-if="attorneys.length > 0" class="owl-carousel team-carousel" data-aos="fade-right" data-aos-duration="2000" ref="teamCarousel">
               <div v-for="attorney in attorneys" :key="attorney.id" class="team-item">
                 <div class="position-relative">
-                  <img class="img-fluid w-100" :src="getImageUrl(attorney.photo)" :alt="attorney.full_name" @error="handleImageError" />
+                  <img class="img-fluid" :src="getImageUrl(attorney.photo)" :alt="attorney.full_name" @error="handleImageError" />
                   <div
                     class="team-overlay position-absolute d-flex align-items-center justify-content-center m-3"
                   >
@@ -162,11 +162,9 @@ export default defineComponent({
   opacity: 1;
 }
 
-/* Dynamic Width based on content */
+/* Fixed Width for uniform size */
 .team-item {
-  width: auto !important;
-  min-width: 300px;
-  max-width: 350px;
+  width: 300px !important;
 }
 
 .team-item .position-relative {

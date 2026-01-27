@@ -27,7 +27,7 @@
             </RouterLink>
           </div>
         </div>
-        <div data-aos="fade-right" class="row mt-4">
+        <!-- <div data-aos="fade-right" class="row mt-4">
           <div v-if="settings?.contact_email" class="col-md-4">
             <div class="card border-0">
               <div class="card-header bg-transparent border-0">
@@ -75,7 +75,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>

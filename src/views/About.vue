@@ -32,7 +32,7 @@
                 <img class="img-thumbnail border-0 h-100" src="/img/about.png" alt="About">
               </div>
             </div>
-            <div data-aos="fade-right" class="row mt-4">
+            <!-- <div data-aos="fade-right" class="row mt-4">
               <div v-for="(contact, index) in content.contacts" :key="index" class="col-md-4">
                 <div class="card border-0">
                   <div class="card-header bg-transparent border-0">
@@ -46,7 +46,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </section>

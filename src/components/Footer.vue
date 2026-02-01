@@ -131,6 +131,10 @@
                   <i class="fas fa-map-marker-alt"></i>
                   <span>{{ settings.contact_address }}</span>
                 </li>
+                <li v-if="settings?.contact_address_secondary">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>{{ settings.contact_address_secondary }}</span>
+                </li>
                 <li v-if="settings?.contact_phone">
                   <i class="fas fa-phone-alt"></i>
                   <a :href="`tel:${settings.contact_phone}`">{{ settings.contact_phone }}</a>
@@ -242,7 +246,7 @@ footer {
 }
 
 .footer-logo img {
-  height: 50px;
+  height: 100px;
   width: auto;
   filter: brightness(1.1);
 }

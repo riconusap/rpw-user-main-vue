@@ -112,6 +112,16 @@
               placeholder="123 Main Street, Jakarta, Indonesia"
             ></textarea>
           </div>
+          <div class="form-group">
+            <label for="contact_address_secondary">Office Address (Secondary)</label>
+            <textarea
+              id="contact_address_secondary"
+              v-model="settings.contact_address_secondary"
+              class="form-control"
+              rows="3"
+              placeholder="Secondary address, e.g. branch office..."
+            ></textarea>
+          </div>
 
           <div class="form-row">
             <div class="form-group">

@@ -6,7 +6,7 @@
           <img 
             v-if="settings?.site_logo" 
             :src="getImageUrl(settings.site_logo, 'images')" 
-            width="100px" 
+            width="150px" 
             :alt="settings.site_name || 'Logo'" 
           />
           <img v-else src="/img/logo.png" width="100px" alt="R. Prama Wijaya Law Firm" />

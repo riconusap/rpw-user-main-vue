@@ -9,6 +9,7 @@ interface SiteSettings {
   site_logo: string
   site_favicon: string
   contact_address: string
+  contact_address_secondary?: string
   contact_phone: string
   contact_whatsapp: string
   contact_email: string
@@ -57,6 +58,7 @@ export const useSettings = () => {
         site_logo: '',
         site_favicon: '',
         contact_address: '',
+        contact_address_secondary: '',
         contact_phone: '',
         contact_whatsapp: '',
         contact_email: '',

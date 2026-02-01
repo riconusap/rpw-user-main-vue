@@ -39,7 +39,12 @@
         <div class="attorney-content">
           <h3>{{ attorney.full_name }}</h3>
           <p class="position">{{ attorney.position }}</p>
-          <p v-if="attorney.bio" class="bio">{{ truncateBio(attorney.bio) }}</p>
+          <div v-if="attorney.bio" class="bio">
+            <span v-html="truncateBioHtml(attorney.bio)"></span>
+            <template v-if="attorney.bio && attorney.bio.length > 100">
+              <button class="btn btn-link btn-read-more" @click="goToAttorneyDetail(attorney)">Read More</button>
+            </template>
+          </div>
 
           <div class="attorney-meta" v-if="attorney.certificates && attorney.certificates.length > 0">
             <span class="meta-item">
@@ -120,13 +125,10 @@
 
           <div class="form-group">
             <label for="bio">Biography</label>
-            <textarea
-              id="bio"
+            <TiptapEditor
               v-model="formData.bio"
-              class="form-control"
-              rows="4"
               placeholder="Brief biography and experience..."
-            ></textarea>
+            />
           </div>
 
           <!-- Certificates Section -->
@@ -226,6 +228,7 @@
 import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { supabase, getImageUrl } from '@/lib/supabase';
 import ImageUpload from '@/components/ImageUpload.vue';
+import TiptapEditor from '@/components/TiptapEditor.vue';
 
 interface Attorney {
   id: string;
@@ -262,6 +265,7 @@ export default defineComponent({
   name: 'AdminAttorneys',
   components: {
     ImageUpload,
+    TiptapEditor,
   },
   setup() {
     const loading = ref(false);
@@ -303,8 +307,17 @@ export default defineComponent({
       }
     };
 
-    const truncateBio = (bio: string) => {
-      return bio.length > 150 ? bio.substring(0, 150) + '...' : bio;
+    // Truncate HTML bio to 100 chars (strip tags, then cut)
+    const truncateBioHtml = (bio: string) => {
+      const div = document.createElement('div');
+      div.innerHTML = bio;
+      const text = div.textContent || div.innerText || '';
+      return text.length > 100 ? text.substring(0, 100) + '...' : text;
+    };
+
+    // Go to attorney detail page (assume route: /attorneys/:id)
+    const goToAttorneyDetail = (attorney: Attorney) => {
+      window.location.href = `/attorneys/${attorney.id}`;
     };
 
     const openModal = (attorney?: Attorney) => {
@@ -460,10 +473,11 @@ export default defineComponent({
       removeCertificate,
       toggleActive,
       deleteAttorney,
-      truncateBio,
       getImageUrl,
       getImageUrlWithCache,
       handleImageError,
+      truncateBioHtml,
+      goToAttorneyDetail,
     };
   },
 });

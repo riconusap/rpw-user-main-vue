@@ -313,6 +313,7 @@ interface Settings {
   
   // Contact Information
   contact_address: string;
+  contact_address_secondary: string;
   contact_phone: string;
   contact_whatsapp: string;
   contact_email: string;
@@ -345,6 +346,7 @@ export default defineComponent({
       site_logo: '',
       site_favicon: '',
       contact_address: '',
+      contact_address_secondary: '',
       contact_phone: '',
       contact_whatsapp: '',
       contact_email: '',

@@ -39,7 +39,7 @@
               <h4>FOUNDER</h4>
               <h4>{{ founder.full_name }}</h4>
             </div>
-            <p>{{ founder.bio }}</p>
+            <div class="" v-html="founder.bio"></div>
             <div class="text-center mt-3">
               <RouterLink 
                 :to="`/attorneys/${founder.id}`" 

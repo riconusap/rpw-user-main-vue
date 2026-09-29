@@ -11,8 +11,6 @@ services:
       - "8084:80"
     environment:
       - NODE_ENV=production
-    networks:
-      - nginx-proxy_proxy-network
     restart: always
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
@@ -20,7 +18,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-networks:
-  nginx-proxy_proxy-network:
-    external: true
